@@ -1,11 +1,10 @@
 import { Handler } from "@netlify/functions";
-import puppeteer from "puppeteer-core";
 import chromium from "chrome-aws-lambda";
 
 export const handler: Handler = async (event, context) => {
   const { name = "stranger" } = event.queryStringParameters;
 
-  const browser = await puppeteer.launch({
+  const browser = await chromium.puppeteer.launch({
     executablePath: await chromium.executablePath,
     defaultViewport: {
       width: 1200,
