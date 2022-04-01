@@ -11,6 +11,7 @@ export const handler: Handler = async (event, context) => {
       width: 1200,
       height: 675,
     },
+    headless: true,
   });
 
   const page = await browser.newPage();
