@@ -1,33 +1,35 @@
 import { Handler } from "@netlify/functions";
-import chromium from "chrome-aws-lambda";
+const chromium = require("chrome-aws-lambda");
 
 export const handler: Handler = async (event, context) => {
-  const { name = "stranger" } = event.queryStringParameters;
+  const pageToScreenshot = JSON.parse(event.body).pageToScreenshot;
+
+  if (!pageToScreenshot)
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ message: "Page URL not defined" }),
+    };
 
   const browser = await chromium.puppeteer.launch({
     args: chromium.args,
-    defaultViewport: {
-      width: 1200,
-      height: 675,
-    },
+    defaultViewport: chromium.defaultViewport,
     executablePath: await chromium.executablePath,
     headless: chromium.headless,
   });
 
   const page = await browser.newPage();
 
-  await page.setContent(`
-    <h1>Hola ${name} hoy es ${new Date().toLocaleTimeString()}</h1>
-  `);
+  await page.goto(pageToScreenshot, { waitUntil: "networkidle2" });
 
-  const buffer = await page.screenshot();
+  const screenshot = await page.screenshot({ encoding: "binary" });
+
+  await browser.close();
 
   return {
     statusCode: 200,
-    headers: {
-      "Content-Type": "image/png",
-    },
-    body: buffer.toString("base64"),
-    isBase64Encoded: true,
+    body: JSON.stringify({
+      message: `Complete screenshot of ${pageToScreenshot}`,
+      buffer: screenshot,
+    }),
   };
 };
