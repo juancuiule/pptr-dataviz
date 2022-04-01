@@ -6,7 +6,7 @@ export const handler: Handler = async (event, context) => {
   const { name = 'stranger' } = event.queryStringParameters
 
   const browser = await puppeteer.launch({
-    executablePath: await chromium.executablePath,,
+    executablePath: await chromium.executablePath,
     args: chromium.args,
     defaultViewport: {
       width: 1200,
