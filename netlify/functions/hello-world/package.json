@@ -8,8 +8,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "chrome-aws-lambda": "^10.1.0",
-    "puppeteer-core": "^13.5.2"
+    "chrome-aws-lambda": "^2.0.0",
+    "puppeteer-core": "^2.0.0"
   },
   "devDependencies": {
     "puppeteer": "^2.0.0"
